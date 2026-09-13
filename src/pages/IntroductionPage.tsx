@@ -19,9 +19,9 @@ export default function IntroductionPage() {
       <div className="h-[130px] bg-brand-cream sm:h-[170px] md:h-[200px]" aria-hidden="true" />
       <AboutUsSection />
       <IntroTeachersSection />
-      <FeaturedStudentsSection sectionId="thanh-tich-hoc-vien" />
+      <FeaturedStudentsSection sectionId="thanh-tich-hoc-vien" enableFadeIn={false} />
       <ExtracurricularSection />
-      <CtaSection />
+      <CtaSection enableFadeIn={false} />
       <Footer />
     </div>
   );

@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
-import { useScrollReveal, revealClass, revealTransition } from '@/hooks/useScrollReveal';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 type ImageItem = {
   id: number;
@@ -22,16 +21,6 @@ const imageItems: ImageItem[] = [
   { id: 8, title: 'Liên Hoan Nghệ Thuật', desc: 'Biểu diễn văn nghệ tiếng Trung của học viên', url: 'https://res.cloudinary.com/qugyphlv/image/upload/v1789005178/hoat-dong_2.jpg', featured: false },
   { id: 9, title: 'Câu Lạc Bộ Tiếng Trung', desc: 'Giao lưu, kết nối và học hỏi cùng cộng đồng', url: 'https://res.cloudinary.com/qugyphlv/image/upload/v1789005176/hoat-dong_10.jpg', featured: false },
 ];
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 24, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } },
-};
 
 function ImageModal({ item, onClose }: { item: ImageItem; onClose: () => void }) {
   useEffect(() => {
@@ -84,8 +73,64 @@ function ImageModal({ item, onClose }: { item: ImageItem; onClose: () => void })
 
 export default function ExtracurricularSection() {
   const [selectedItem, setSelectedItem] = useState<ImageItem | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { ref: headerRef, visible: headerVisible } = useScrollReveal<HTMLDivElement>();
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const startScrollLeft = useRef(0);
+
+  const updateScrollButtons = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 5);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
+  }, []);
+
+  useEffect(() => {
+    updateScrollButtons();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', updateScrollButtons);
+    window.addEventListener('resize', updateScrollButtons);
+    return () => {
+      el.removeEventListener('scroll', updateScrollButtons);
+      window.removeEventListener('resize', updateScrollButtons);
+    };
+  }, [updateScrollButtons]);
+
+  const scrollByAmount = (direction: 'left' | 'right') => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.8;
+    el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    isDragging.current = true;
+    startX.current = e.clientX;
+    startScrollLeft.current = el.scrollLeft;
+    el.setPointerCapture(e.pointerId);
+    el.classList.add('cursor-grabbing');
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!isDragging.current) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const delta = e.clientX - startX.current;
+    el.scrollLeft = startScrollLeft.current - delta;
+  };
+
+  const onPointerUp = (e: React.PointerEvent) => {
+    isDragging.current = false;
+    const el = scrollRef.current;
+    if (!el) return;
+    el.releasePointerCapture(e.pointerId);
+    el.classList.remove('cursor-grabbing');
+  };
 
   return (
     <section
@@ -103,10 +148,7 @@ export default function ExtracurricularSection() {
 
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
-        <div
-          ref={headerRef}
-          className={`mx-auto max-w-3xl text-center ${revealTransition} ${revealClass(headerVisible)}`}
-        >
+        <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 flex items-center justify-center gap-4">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#BA7517]/60 sm:w-20" />
             <p className="font-sans text-xs uppercase tracking-[0.3em] text-[#BA7517]">
@@ -130,61 +172,76 @@ export default function ExtracurricularSection() {
           <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#BA7517]/50 sm:w-24" />
         </div>
 
-        {/* Bento gallery — horizontal scroll with snap */}
-        <div
-          ref={scrollRef}
-          className="relative w-full cursor-grab overflow-x-auto pb-4 [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
-        >
-          <motion.div
-            className="mx-auto flex w-max gap-4 px-1"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+        {/* Gallery with arrow navigation */}
+        <div className="relative">
+          {/* Prev arrow */}
+          <button
+            type="button"
+            onClick={() => scrollByAmount('left')}
+            disabled={!canScrollLeft}
+            aria-label="Trước"
+            className={`absolute left-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-white text-brand-gold-deep shadow-md transition-all hover:bg-brand-gold hover:text-brand-brown disabled:pointer-events-none disabled:opacity-30 sm:left-2 sm:h-12 sm:w-12`}
           >
-            {imageItems.map((item) => (
-              <motion.div
-                key={item.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.03 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className={`group relative flex h-[16rem] shrink-0 cursor-pointer items-end overflow-hidden rounded-xl border-2 border-brand-gold/60 shadow-md hover:border-brand-gold hover:shadow-xl sm:h-[20rem] ${
-                  item.featured
-                    ? 'w-[75vw] snap-center sm:w-[32rem]'
-                    : 'w-[75vw] snap-center sm:w-[18rem]'
-                }`}
-                onClick={() => setSelectedItem(item)}
-                tabIndex={0}
-                role="button"
-                aria-label={`Xem ${item.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedItem(item);
-                  }
-                }}
-              >
-                <img
-                  src={item.url}
-                  alt={item.title}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                  draggable={false}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                <div className="relative z-10 translate-y-4 p-5 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                  <h3 className="font-display text-lg font-bold text-white">{item.title}</h3>
-                  <p className="mt-1 font-sans text-sm text-white/80">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+            <ChevronLeft className="h-5 w-5" />
+          </button>
 
-        {/* Hint text */}
-        <p className="mt-6 text-center font-sans text-sm text-gray-400">
-          Kéo ngang để xem thêm →
-        </p>
+          {/* Scrollable gallery */}
+          <div
+            ref={scrollRef}
+            className="relative w-full cursor-grab overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerUp}
+          >
+            <div className="flex w-max gap-4 px-1">
+              {imageItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`group relative flex h-[16rem] shrink-0 cursor-pointer items-end overflow-hidden rounded-xl border-2 border-brand-gold/60 shadow-md transition-all duration-300 hover:border-brand-gold hover:shadow-xl sm:h-[20rem] ${
+                    item.featured
+                      ? 'w-[75vw] snap-center sm:w-[32rem]'
+                      : 'w-[75vw] snap-center sm:w-[18rem]'
+                  }`}
+                  onClick={() => setSelectedItem(item)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Xem ${item.title}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedItem(item);
+                    }
+                  }}
+                >
+                  <img
+                    src={item.url}
+                    alt={item.title}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="relative z-10 translate-y-4 p-5 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                    <h3 className="font-display text-lg font-bold text-white">{item.title}</h3>
+                    <p className="mt-1 font-sans text-sm text-white/80">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Next arrow */}
+          <button
+            type="button"
+            onClick={() => scrollByAmount('right')}
+            disabled={!canScrollRight}
+            aria-label="Sau"
+            className={`absolute right-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-white text-brand-gold-deep shadow-md transition-all hover:bg-brand-gold hover:text-brand-brown disabled:pointer-events-none disabled:opacity-30 sm:right-2 sm:h-12 sm:w-12`}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>

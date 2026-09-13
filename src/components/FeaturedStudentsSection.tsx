@@ -11,9 +11,9 @@ const achievements = [
   'https://res.cloudinary.com/qugyphlv/image/upload/v1789259690/vinh-danh-hoc-vien1_a-10.webp',
 ];
 
-export default function FeaturedStudentsSection({ sectionId = 'hoc-vien-tieu-bieu' }: { sectionId?: string }) {
-  const { ref: headerRef, visible: headerVisible } = useScrollReveal<HTMLDivElement>();
-  const { ref: gridRef, visible: gridVisible } = useScrollReveal<HTMLDivElement>();
+export default function FeaturedStudentsSection({ sectionId = 'hoc-vien-tieu-bieu', enableFadeIn = true }: { sectionId?: string; enableFadeIn?: boolean }) {
+  const { ref: headerRef, visible: headerVisible } = useScrollReveal<HTMLDivElement>({ enabled: enableFadeIn });
+  const { ref: gridRef, visible: gridVisible } = useScrollReveal<HTMLDivElement>({ enabled: enableFadeIn });
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -48,7 +48,7 @@ export default function FeaturedStudentsSection({ sectionId = 'hoc-vien-tieu-bie
       <div className="relative z-10 mx-auto max-w-6xl">
         <div
           ref={headerRef}
-          className={`mx-auto max-w-3xl text-center ${revealTransition} ${revealClass(headerVisible)}`}
+          className={`mx-auto max-w-3xl text-center ${enableFadeIn ? `${revealTransition} ${revealClass(headerVisible)}` : ''}`}
         >
           <div className="mb-6 flex items-center justify-center gap-4">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-brand-gold/70 sm:w-20" />
@@ -77,7 +77,7 @@ export default function FeaturedStudentsSection({ sectionId = 'hoc-vien-tieu-bie
                 key={src}
                 type="button"
                 onClick={() => setLightboxIndex(index)}
-                className={`group relative block overflow-hidden rounded-xl border border-brand-gold/60 bg-brand-cream p-2 shadow-md transition-all duration-300 hover:scale-[1.03] hover:border-brand-gold hover:shadow-xl ${revealTransition} ${revealClass(gridVisible)}`}
+                className={`group relative block overflow-hidden rounded-xl border border-brand-gold/60 bg-brand-cream p-2 shadow-md transition-all duration-300 hover:scale-[1.03] hover:border-brand-gold hover:shadow-xl ${enableFadeIn ? `${revealTransition} ${revealClass(gridVisible)}` : ''}`}
                 style={{ transitionDelay: gridVisible ? `${index * 100}ms` : '0ms' }}
                 aria-label={`Xem thành tích học viên ${index + 1}`}
               >

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useScrollReveal, revealClass, revealTransition } from '@/hooks/useScrollReveal';
 
 const teachers = [
   {
@@ -45,8 +44,6 @@ export default function IntroTeachersSection() {
   const [paused, setPaused] = useState(false);
   const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartX = useRef<number | null>(null);
-  const { ref: headerRef, visible: headerVisible } = useScrollReveal<HTMLDivElement>();
-  const { ref: carouselRef, visible: carouselVisible } = useScrollReveal<HTMLDivElement>();
 
   const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % teachers.length);
@@ -108,8 +105,7 @@ export default function IntroTeachersSection() {
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
         <div
-          ref={headerRef}
-          className={`mx-auto max-w-3xl text-center ${revealTransition} ${revealClass(headerVisible)}`}
+          className="mx-auto max-w-3xl text-center"
         >
           <div className="mb-6 flex items-center justify-center gap-4">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#BA7517]/60 sm:w-20" />
@@ -134,9 +130,7 @@ export default function IntroTeachersSection() {
 
         {/* Carousel */}
         <div
-          ref={carouselRef}
-          className={`relative ${revealTransition} ${revealClass(carouselVisible)}`}
-          style={{ transitionDelay: '150ms' }}
+          className="relative"
           onMouseEnter={() => pauseAutoAdvance()}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}

@@ -1,5 +1,3 @@
-import { useScrollReveal, revealClass, revealTransition } from '@/hooks/useScrollReveal';
-
 const stats = [
   { value: '15+', label: 'năm phát triển' },
   { value: '100K+', label: 'học viên đồng hành' },
@@ -7,9 +5,6 @@ const stats = [
 ];
 
 export default function AboutUsSection() {
-  const { ref: textRef, visible: textVisible } = useScrollReveal<HTMLDivElement>();
-  const { ref: imageRef, visible: imageVisible } = useScrollReveal<HTMLDivElement>();
-
   return (
     <section
       id="ve-chung-toi"
@@ -27,10 +22,7 @@ export default function AboutUsSection() {
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-center">
           {/* Left: text content */}
-          <div
-            ref={textRef}
-            className={`${revealTransition} ${revealClass(textVisible)}`}
-          >
+          <div>
             {/* Gold label with vertical accent line */}
             <div className="flex items-center gap-3 mb-6">
               <div className="h-8 w-px bg-gradient-to-b from-transparent via-[#BA7517] to-transparent" />
@@ -40,7 +32,7 @@ export default function AboutUsSection() {
             </div>
 
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-brand-red leading-tight mb-8">
-              15+ Năm Lái Đò
+              <span className="font-sans font-extrabold tracking-tight">15+</span> Năm Lái Đò
             </h2>
 
             <p className="font-sans text-lg text-gray-600 leading-[1.85] mb-10 max-w-xl">
@@ -75,11 +67,7 @@ export default function AboutUsSection() {
           </div>
 
           {/* Right: image with decorative framing */}
-          <div
-            ref={imageRef}
-            className={`relative flex justify-center lg:justify-end ${revealTransition} ${revealClass(imageVisible)}`}
-            style={{ transitionDelay: '150ms' }}
-          >
+          <div className="relative flex justify-center lg:justify-end">
             {/* Soft gold glow behind the image */}
             <div
               className="absolute inset-0 -z-10 rounded-3xl bg-brand-gold/15 blur-3xl scale-95"

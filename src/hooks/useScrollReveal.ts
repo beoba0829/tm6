@@ -12,15 +12,19 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
   options?: {
     threshold?: number;
     rootMargin?: string;
+    enabled?: boolean;
   /** If true, observe the element's children with stagger instead of the element itself. */
   }
 ): { ref: React.RefObject<T>; visible: boolean } {
-  const { threshold = 0.15, rootMargin = '0px 0px -50px 0px' } = options ?? {};
+  const { threshold = 0.15, rootMargin = '0px 0px -50px 0px', enabled = true } = options ?? {};
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !enabled) {
+      setVisible(true);
+      return;
+    }
 
     // Respect reduced motion: show immediately
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -42,7 +46,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [enabled, threshold, rootMargin]);
 
   return { ref, visible };
 }
