@@ -1,4 +1,3 @@
-import { ChevronDown } from 'lucide-react';
 import Header from './Header';
 
 export default function IntroHero() {
@@ -23,11 +22,6 @@ export default function IntroHero() {
           Hành trình 15 năm xây dựng hệ sinh thái đào tạo tiếng Trung toàn diện,
           cùng đội ngũ giảng viên tận tâm và hàng trăm nghìn học viên đồng hành.
         </p>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-center">
-        <span className="font-sans text-xs text-white/60">Cuộn xuống</span>
-        <ChevronDown className="mx-auto mt-2 h-5 w-5 animate-bounce text-brand-gold" />
       </div>
 
     </section>

@@ -11,7 +11,7 @@ const achievements = [
   'https://res.cloudinary.com/qugyphlv/image/upload/v1789259690/vinh-danh-hoc-vien1_a-10.webp',
 ];
 
-export default function FeaturedStudentsSection() {
+export default function FeaturedStudentsSection({ sectionId = 'hoc-vien-tieu-bieu' }: { sectionId?: string }) {
   const { ref: headerRef, visible: headerVisible } = useScrollReveal<HTMLDivElement>();
   const { ref: gridRef, visible: gridVisible } = useScrollReveal<HTMLDivElement>();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -42,7 +42,7 @@ export default function FeaturedStudentsSection() {
   }, [lightboxIndex, closeLightbox, showPrev, showNext]);
 
   return (
-    <section id="hoc-vien-tieu-bieu" className="relative overflow-hidden bg-gradient-to-br from-brand-red to-[#6E1717] px-6 py-20 sm:py-28">
+    <section id={sectionId} className="relative overflow-hidden bg-gradient-to-br from-brand-red to-[#6E1717] px-6 py-20 sm:py-28" style={{ scrollMarginTop: '88px' }}>
       <div className="pointer-events-none absolute -left-16 top-10 font-display text-[18rem] leading-none text-white/[0.035]" aria-hidden="true">榮</div>
 
       <div className="relative z-10 mx-auto max-w-6xl">

@@ -148,7 +148,7 @@ export default function IntroTeachersSection() {
           />
 
           {/* 3D coverflow container */}
-          <div className="relative flex h-[440px] items-center justify-center overflow-hidden [perspective:1200px] md:h-[540px]">
+          <div className="relative flex h-[520px] items-center justify-center overflow-hidden [perspective:1200px] md:h-[620px]">
             {teachers.map((teacher, index) => {
               const total = teachers.length;
               let pos = index - currentIndex;
@@ -165,14 +165,14 @@ export default function IntroTeachersSection() {
                   key={teacher.name}
                   className="absolute flex items-center justify-center transition-all duration-500 ease-in-out"
                   style={{
-                    transform: `translateX(${pos * 42}%) scale(${isCenter ? 1 : isAdjacent ? 0.82 : 0.65}) rotateY(${pos * -8}deg)`,
+                    transform: `translateX(${pos * 38}%) scale(${isCenter ? 1 : isAdjacent ? 0.78 : 0.6}) rotateY(${pos * -8}deg)`,
                     zIndex: isCenter ? 10 : isAdjacent ? 5 : 1,
                     opacity: isCenter ? 1 : isAdjacent ? 0.45 : 0,
                     filter: isCenter ? 'blur(0px)' : 'blur(3px)',
                     visibility: isVisible ? 'visible' : 'hidden',
                   }}
                 >
-                  <div className="relative w-64 h-[420px] md:w-80 md:h-[520px] rounded-2xl border-2 border-brand-gold/70 bg-white p-2 shadow-2xl shadow-black/20 overflow-hidden">
+                  <div className="relative w-[85vw] h-[500px] md:w-96 md:h-[600px] rounded-2xl border-2 border-brand-gold/70 bg-white p-2 shadow-2xl shadow-black/20 overflow-hidden">
                     <img
                       src={teacher.image}
                       alt={teacher.alt}
