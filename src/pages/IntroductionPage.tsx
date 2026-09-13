@@ -1,10 +1,10 @@
 import IntroHero from '@/components/IntroHero';
 import Medallion from '@/components/Medallion';
 import AboutUsSection from '@/components/AboutUsSection';
+import IntroTeachersSection from '@/components/IntroTeachersSection';
 import Footer from '@/components/Footer';
 
 const placeholders = [
-  { id: 'giang-vien', title: 'Giảng Viên' },
   { id: 'thanh-tich-hoc-vien', title: 'Thành Tích Học Viên' },
   { id: 'hoat-dong-ngoai-khoa', title: 'Hoạt Động Ngoại Khóa' },
   { id: 'cta', title: 'CTA' },
@@ -40,6 +40,7 @@ export default function IntroductionPage() {
       </div>
       <div className="h-[130px] bg-brand-cream sm:h-[170px] md:h-[200px]" aria-hidden="true" />
       <AboutUsSection />
+      <IntroTeachersSection />
       {placeholders.map((section, index) => (
         <PlaceholderSection key={section.id} {...section} index={index + 1} />
       ))}
