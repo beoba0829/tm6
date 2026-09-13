@@ -1,6 +1,5 @@
 import { ChevronDown } from 'lucide-react';
 import Header from './Header';
-import Medallion from './Medallion';
 
 export default function IntroHero() {
   return (
@@ -31,9 +30,6 @@ export default function IntroHero() {
         <ChevronDown className="mx-auto mt-2 h-5 w-5 animate-bounce text-brand-gold" />
       </div>
 
-      <div className="pointer-events-none absolute -bottom-[130px] left-1/2 z-20 -translate-x-1/2 sm:-bottom-[170px] md:-bottom-[200px]">
-        <Medallion />
-      </div>
     </section>
   );
 }

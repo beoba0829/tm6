@@ -8,14 +8,6 @@ function FacebookIcon() {
   );
 }
 
-function ZaloIcon() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-6 w-6 fill-current sm:h-7 sm:w-7" aria-hidden="true">
-      <path d="M24 4C12.95 4 4 11.61 4 21c0 5.14 2.94 9.76 7.58 12.82L10 44l9.45-5.27c1.47.18 2.99.27 4.55.27 11.05 0 20-7.61 20-17S35.05 4 24 4Zm-6.2 22.38h-5.1l5.64-7.2h-5.29v-3.17h9.75v2.8l-5.56 7.57h5.76v3.17H17.8v-3.17Zm13.64 0h-2.86v-1.18c-.72.9-1.72 1.45-2.98 1.45-2.44 0-4.34-2.28-4.34-5.4 0-3.08 1.9-5.35 4.34-5.35 1.26 0 2.26.54 2.98 1.44v-1.17h2.86v10.21Zm-4.99-7.59c-1.25 0-2.15 1-2.15 2.46 0 1.48.9 2.49 2.15 2.49 1.24 0 2.13-1.01 2.13-2.49 0-1.46-.89-2.46-2.13-2.46Z" />
-    </svg>
-  );
-}
-
 function FloatingLink({
   href,
   label,
@@ -49,10 +41,14 @@ export default function FloatingContact() {
         <FloatingLink
           href="https://zalo.me/0398519485"
           label="Zalo"
-          className="relative bg-[#0068FF]"
+          className="relative bg-white"
           external
         >
-          <ZaloIcon />
+          <img
+            src="https://res.cloudinary.com/qugyphlv/image/upload/v1789264481/Logo-Zalo-Arc.webp"
+            alt="Zalo"
+            className="h-[70%] w-[70%] object-contain"
+          />
         </FloatingLink>
       </div>
       <FloatingLink
